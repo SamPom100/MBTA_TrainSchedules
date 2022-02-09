@@ -23,43 +23,48 @@ def prettyPrint(printIN: str):
     print(json.dumps(printIN, indent=4, sort_keys=True))
 
 def timeConvert(timeIN: str):
-    return parser.parse(timeIN)
+    return parser.parse(timeIN).strftime('%I:%M:%S %p') #could do %S after the %M for seconds
+    
+def getTimes(stopID: int):
+    toReturn = []
+    url = "https://api-v3.mbta.com/predictions?filter[stop]="+str(stopID)
+    response = requests.request("GET", url, headers={}, data={}).text
+    parsed = json.loads(response)
+    for entry in parsed['data']:
+        arrival_time = entry['attributes']['arrival_time']
+        tmpIndex = arrival_time.index('T')
+        cleanTime = arrival_time[tmpIndex+1 : arrival_time.index('-',tmpIndex)]
+        timeObject = parser.parse(cleanTime)
+        now = datetime.now()
+        diff = timeObject - now
+        arrivalStr = ''
+        if(timeObject < now):
+            arrivalStr = 'passed'
+        else:
+            arrivalStr = str(round(diff.total_seconds()/60,2)) + " minutes"
+        toReturn.append(timeObject.strftime('%I:%M %p') +"  -->  "+arrivalStr)
+    return toReturn
+
+def harvard():
+    for x in getTimes(70130):
+        print(x)
 
 def blandford():
-    payload={}
-    headers = {}
-    url = "https://api-v3.mbta.com/predictions?filter[stop]=70149"
-    response = requests.request("GET", url, headers=headers, data=payload).text
-    parsed = json.loads(response)
-    key2 = parsed['data']
-    for entry in key2:
-        arrival_time = entry['attributes']['arrival_time']
-        tmpIndex = arrival_time.index('T')
-        cleanTime = arrival_time[tmpIndex+1 : arrival_time.index('-',tmpIndex)]
-        a = timeConvert(cleanTime)
-        print(a.strftime('%I:%M %p')) #could do %S after the %M for seconds
-    
-def harvard():
-    payload={}
-    headers = {}
-    url = "https://api-v3.mbta.com/predictions?filter[stop]=1302"
-    response = requests.request("GET", url, headers=headers, data=payload).text
-    parsed = json.loads(response)
-    key2 = parsed['data']
-    for entry in key2:
-        arrival_time = entry['attributes']['arrival_time']
-        tmpIndex = arrival_time.index('T')
-        cleanTime = arrival_time[tmpIndex+1 : arrival_time.index('-',tmpIndex)]
-        a = timeConvert(cleanTime)
-        print(a.strftime('%I:%M %p')) #could do %S after the %M for seconds
-    
+    for x in getTimes(70149):
+        print(x)
+
+def printBoth():
+    print('\n')
+    print("--------- Harvard ---------")
+    harvard()
+    print('\n\n')
+    print("--------- Blandford ---------")
+    blandford()
+    print('\n')
 
 
 
-blandford()
-
-
-
+printBoth()
 
 
 

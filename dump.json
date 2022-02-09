@@ -84,3 +84,44 @@
 
 
 #harvard ave going towards Leechmere
+{
+    "attributes": {
+        "address": null,
+        "at_street": null,
+        "description": "Harvard Avenue - Green Line - Park Street & North",
+        "latitude": 42.350263,
+        "location_type": 0,
+        "longitude": -71.131298,
+        "municipality": "Boston",
+        "name": "Harvard Avenue",
+        "on_street": null,
+        "platform_code": null,
+        "platform_name": "Park Street & North",
+        "vehicle_type": 0,
+        "wheelchair_boarding": 1
+    },
+    "id": "70130",
+    "links": {
+        "self": "/stops/70130"
+    },
+    "relationships": {
+        "facilities": {
+            "links": {
+                "related": "/facilities/?filter[stop]=70130"
+            }
+        },
+        "parent_station": {
+            "data": {
+                "id": "place-harvd",
+                "type": "stop"
+            }
+        },
+        "zone": {
+            "data": {
+                "id": "RapidTransit",
+                "type": "zone"
+            }
+        }
+    },
+    "type": "stop"
+},
